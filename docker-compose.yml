@@ -20,8 +20,8 @@ services:
     restart: always
     hostname: ${DB_HOSTNAME}
     volumes:
-      - db_data:/var/lib/mysql
-      - ./conf/my.cnf:/etc/mysql/conf.d/zzz-overrides.cnf
+      - db_data:/var/lib/mysql #:delegated
+      - ./conf/my.cnf:/etc/mysql/conf.d/zzz-overrides.cnf #:delegated
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     ports:
@@ -54,13 +54,13 @@ services:
       - INVENTORY_API_PORT=${INVENTORY_API_PORT}
       - INVENTORY_API_CONTAINER_NAME=${INVENTORY_API_CONTAINER_NAME}
     volumes:
-      - ${SUSHI_PATH}:/usr/local/apache2/htdocs/sushi
-      - ${INVENTORY_API_PATH}:/usr/local/apache2/htdocs/inventory-api
-      - ${SSL_CERT_PATH}/${SSL_CERT_FILE}:/etc/apache2/ssl/${SSL_CERT_FILE}
-      - ${SSL_CERT_PATH}/${SSL_KEY_FILE}:/etc/apache2/ssl/${SSL_KEY_FILE}
-      - ${SSL_CERT_PATH}/${SSL_CHAIN_FILE}:/etc/apache2/ssl/${SSL_CHAIN_FILE}
-      - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
-      - ./conf/vhosts:/usr/local/apache2/conf/conf.d
+      - ${SUSHI_PATH}:/usr/local/apache2/htdocs/sushi #:delegated
+      - ${INVENTORY_API_PATH}:/usr/local/apache2/htdocs/inventory-api #:delegated
+      - ${SSL_CERT_PATH}/${SSL_CERT_FILE}:/etc/apache2/ssl/${SSL_CERT_FILE} #:delegated
+      - ${SSL_CERT_PATH}/${SSL_KEY_FILE}:/etc/apache2/ssl/${SSL_KEY_FILE} #:delegated
+      - ${SSL_CERT_PATH}/${SSL_CHAIN_FILE}:/etc/apache2/ssl/${SSL_CHAIN_FILE} #:delegated
+      - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf #:delegated
+      - ./conf/vhosts:/usr/local/apache2/conf/conf.d #:delegated
 
   # ------------------------------------------------------------
   # Sushi ERP app
@@ -77,12 +77,25 @@ services:
       - INVENTORY_API_HOSTNAME=${INVENTORY_API_HOSTNAME}
       - INVENTORY_API_PORT=${INVENTORY_API_PORT}
       - INVENTORY_API_KEY=${INVENTORY_API_KEY}
+      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
+      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
+      - AWS_SES_DOMAIN=${AWS_SES_DOMAIN}
+      - AWS_SES_REGION={$AWS_SES_REGION}
+      - AWS_SES_API_KEY={$AWS_SES_API_KEY}
+      - AWS_SES_SECRET_KEY={$AWS_SES_SECRET_KEY}
+      - AWS_S3_REGION={$AWS_S3_REGION}
+      - AWS_S3_API_KEY={$AWS_S3_API_KEY}
+      - AWS_S3_SECRET_KEY={$AWS_S3_SECRET_KEY}
+      - AWS_S3_BUCKET={$AWS_S3_BUCKET}
+      - PUSHER_APP_ID={$PUSHER_APP_ID}
+      - PUSHER_API_KEY={$PUSHER_API_KEY}
+      - PUSHER_SECRET_KEY={$PUSHER_SECRET_KEY}
     networks:
       - backend
     volumes:
-      - ${SUSHI_PATH}:/usr/local/apache2/htdocs/sushi
-      - ./conf/php.ini:/usr/local/etc/php/conf.d/zzz-overrides.ini
-      - ./conf/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf
+      - ${SUSHI_PATH}:/usr/local/apache2/htdocs/sushi #:delegated
+      - ./conf/php.ini:/usr/local/etc/php/conf.d/zzz-overrides.ini #:delegated
+      - ./conf/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf #:delegated
     depends_on:
       - db
       - apache
@@ -102,9 +115,9 @@ services:
     networks:
       - backend
     volumes:
-      - ${INVENTORY_API_PATH}:/usr/local/apache2/htdocs/inventory-api
-      - ./php/conf/php.ini:/usr/local/etc/php/conf.d/zzz-overrides.ini
-      - ./php/conf/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf
+      - ${INVENTORY_API_PATH}:/usr/local/apache2/htdocs/inventory-api #:delegated
+      - ./php/conf/php.ini:/usr/local/etc/php/conf.d/zzz-overrides.ini #:delegated
+      - ./php/conf/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf #:delegated
     depends_on:
       - db
       - apache

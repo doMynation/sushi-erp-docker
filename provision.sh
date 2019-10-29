@@ -42,14 +42,12 @@ apt-get install -y \
     awscli
 
 cd "$(dirname "$0")"
-cp ./.env.sample ./.env
 
 mkdir ./data
 
 echo "Installing Sushi ERP..."
 mkdir ./data/sushi
 git clone https://$1@github.com/domynation/sushi-erp ./data/sushi
-#chmod -R 0777 ./data/sushi/assets/uploads
 composer install -d ./data/sushi --ignore-platform-reqs
 echo "Done."
 
