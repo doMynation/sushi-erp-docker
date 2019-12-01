@@ -20,8 +20,8 @@ services:
     restart: always
     hostname: ${DB_HOSTNAME}
     volumes:
-      - db_data:/var/lib/mysql #:delegated
-      - ./conf/my.cnf:/etc/mysql/conf.d/zzz-overrides.cnf #:delegated
+      - db_data:/var/lib/mysql:delegated
+      - ./conf/my.cnf:/etc/mysql/conf.d/zzz-overrides.cnf:delegated
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     ports:
@@ -54,19 +54,19 @@ services:
       - INVENTORY_API_PORT=${INVENTORY_API_PORT}
       - INVENTORY_API_CONTAINER_NAME=${INVENTORY_API_CONTAINER_NAME}
     volumes:
-      - ${SUSHI_PATH}:/usr/local/apache2/htdocs/sushi #:delegated
-      - ${INVENTORY_API_PATH}:/usr/local/apache2/htdocs/inventory-api #:delegated
-      - ${SSL_CERT_PATH}/${SSL_CERT_FILE}:/etc/apache2/ssl/${SSL_CERT_FILE} #:delegated
-      - ${SSL_CERT_PATH}/${SSL_KEY_FILE}:/etc/apache2/ssl/${SSL_KEY_FILE} #:delegated
-      - ${SSL_CERT_PATH}/${SSL_CHAIN_FILE}:/etc/apache2/ssl/${SSL_CHAIN_FILE} #:delegated
-      - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf #:delegated
-      - ./conf/vhosts:/usr/local/apache2/conf/conf.d #:delegated
+      - ${SUSHI_PATH}:/usr/local/apache2/htdocs/sushi:delegated
+      - ${INVENTORY_API_PATH}:/usr/local/apache2/htdocs/inventory-api:delegated
+      - ${SSL_CERT_PATH}/${SSL_CERT_FILE}:/etc/apache2/ssl/${SSL_CERT_FILE}:delegated
+      - ${SSL_CERT_PATH}/${SSL_KEY_FILE}:/etc/apache2/ssl/${SSL_KEY_FILE}:delegated
+      - ${SSL_CERT_PATH}/${SSL_CHAIN_FILE}:/etc/apache2/ssl/${SSL_CHAIN_FILE}:delegated
+      - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf:delegated
+      - ./conf/vhosts:/usr/local/apache2/conf/conf.d:delegated
 
   # ------------------------------------------------------------
   # Sushi ERP app
   # ------------------------------------------------------------
   sushi:
-    image: php7.3
+    image: php7.4
     environment:
       - REDIS_HOSTNAME=${REDIS_HOSTNAME}
       - REDIS_PORT=${REDIS_PORT}
@@ -93,9 +93,9 @@ services:
     networks:
       - backend
     volumes:
-      - ${SUSHI_PATH}:/usr/local/apache2/htdocs/sushi #:delegated
-      - ./conf/php.ini:/usr/local/etc/php/conf.d/zzz-overrides.ini #:delegated
-      - ./conf/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf #:delegated
+      - ${SUSHI_PATH}:/usr/local/apache2/htdocs/sushi:delegated
+      - ./conf/php.ini:/usr/local/etc/php/conf.d/zzz-overrides.ini:delegated
+      - ./conf/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf:delegated
     depends_on:
       - db
       - apache
@@ -104,7 +104,7 @@ services:
   # Inventory app
   # ------------------------------------------------------------
   inventory-api:
-    image: php7.3
+    image: php7.4
     environment:
       - DB_DATABASE=${INVENTORY_API_DB_NAME}
       - DB_HOST=${DB_HOSTNAME}
@@ -115,9 +115,9 @@ services:
     networks:
       - backend
     volumes:
-      - ${INVENTORY_API_PATH}:/usr/local/apache2/htdocs/inventory-api #:delegated
-      - ./php/conf/php.ini:/usr/local/etc/php/conf.d/zzz-overrides.ini #:delegated
-      - ./php/conf/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf #:delegated
+      - ${INVENTORY_API_PATH}:/usr/local/apache2/htdocs/inventory-api:delegated
+      - ./php/conf/php.ini:/usr/local/etc/php/conf.d/zzz-overrides.ini:delegated
+      - ./php/conf/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf:delegated
     depends_on:
       - db
       - apache

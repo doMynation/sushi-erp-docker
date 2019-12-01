@@ -1,4 +1,4 @@
-FROM php:7.3.5-fpm-stretch
+FROM php:7.4-fpm-buster
 RUN apt-get update && apt-get install -y --no-install-recommends \
   # intl deps
   zlib1g-dev libicu-dev g++ \
@@ -7,30 +7,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libmagickwand-dev \
   # gd deps
   libfreetype6-dev \
-  libjpeg62-turbo-dev \
+  libjpeg-dev \
   libpng-dev \
-  # xsl deps
-  libxslt-dev \
   # Zip deps
   libzip-dev \
-  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+  && docker-php-ext-configure gd \
+              --with-freetype \
+              --with-jpeg \
+              --enable-gd \
   && docker-php-ext-install -j$(nproc) gd \
+  && docker-php-ext-install -j$(nproc) opcache \
+  && docker-php-ext-install -j$(nproc) bcmath \
   && docker-php-ext-install -j$(nproc) gettext \
   && docker-php-ext-install -j$(nproc) intl \
   && docker-php-ext-install -j$(nproc) exif \
   && docker-php-ext-install -j$(nproc) mysqli \
   && docker-php-ext-install -j$(nproc) pdo_mysql \
-  && docker-php-ext-install -j$(nproc) calendar \
   && docker-php-ext-install -j$(nproc) sockets \
-  && docker-php-ext-install -j$(nproc) xsl \
   && docker-php-ext-install -j$(nproc) zip \
-  && docker-php-ext-install -j$(nproc) pcntl \
-  && docker-php-ext-install -j$(nproc) wddx \
-  && docker-php-ext-install -j$(nproc) shmop \
-  && docker-php-ext-install -j$(nproc) sysvmsg \
-  && docker-php-ext-install -j$(nproc) sysvsem \
-  && docker-php-ext-install -j$(nproc) sysvshm \
-  && docker-php-ext-install -j$(nproc) opcache \
   # PECL extensions
   && pecl install imagick-3.4.3 && docker-php-ext-enable imagick \
   && pecl install apcu-5.1.17 && docker-php-ext-enable apcu \
