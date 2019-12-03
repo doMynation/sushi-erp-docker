@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # PECL extensions
   && pecl install imagick-3.4.3 && docker-php-ext-enable imagick \
   && pecl install apcu-5.1.17 && docker-php-ext-enable apcu \
+  && pecl install xdebug && docker-php-ext-enable xdebug \
   # Clean up
   && rm -rf /var/lib/apt/lists/*
 
