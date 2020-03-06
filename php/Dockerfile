@@ -28,14 +28,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # PECL extensions
   && pecl install imagick-3.4.3 && docker-php-ext-enable imagick \
   && pecl install apcu-5.1.17 && docker-php-ext-enable apcu \
-  && pecl install xdebug && docker-php-ext-enable xdebug \
   # Clean up
   && rm -rf /var/lib/apt/lists/*
 
-# Dev utils (comment this line in prod)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  vim \
-  && rm -rf /var/lib/apt/lists/*
+# (Optional) Dev utils: Install xdebug and vim
+#RUN apt-get update && apt-get install -y --no-install-recommends \
+#  vim \
+#  && pecl install xdebug && docker-php-ext-enable xdebug \
+#  && rm -rf /var/lib/apt/lists/*
 
 RUN mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 RUN usermod -u 1000 www-data
